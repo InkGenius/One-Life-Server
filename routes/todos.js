@@ -3,11 +3,6 @@ var db = require('../db')
 var router = express.Router()
 
 var todoList = []
-//   {id: '1', itemContext: '铲土', fromNow: '一天前', type: '工作', done: false},
-//   {id: '2', itemContext: '浇花', fromNow: '一时前', type: '生活', done: false},
-//   {id: '3', itemContext: '打怪', fromNow: '5分钟前', type: '娱乐', done: false},
-//   {id: '4', itemContext: '送花', fromNow: '1年前', type: '娱乐', done: true}
-// ]
 
 var todoNum = 0
 var doneNum = 0

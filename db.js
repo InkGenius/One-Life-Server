@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize')
-const uuid = require('node-uuid')
+const uuidv4 = require('uuid/v4')
 const config = require('./config')
 
 console.log('init sequelize...')
 
 function generateId () {
-  return uuid.v4()
+  return uuidv4()
 }
 
 var sequelize = new Sequelize(config.database, config.username, config.password, {
@@ -50,28 +50,28 @@ function defineModel (name, attributes) {
     type: Sequelize.BIGINT,
     allowNull: false
   }
-  console.log('model defined for table: ' + name + '\n' + JSON.stringify(attrs, function (k, v) {
-    if (k === 'type') {
-      for (let key in Sequelize) {
-        if (key === 'ABSTRACT' || key === 'NUMBER') {
-          continue
-        }
-        let dbType = Sequelize[key]
-        if (typeof dbType === 'function') {
-          if (v instanceof dbType) {
-            if (v._length) {
-              return `${dbType.key}(${v._length})`
-            }
-            return dbType.key
-          }
-          if (v === dbType) {
-            return dbType.key
-          }
-        }
-      }
-    }
-    return v
-  }, '  '))
+  // console.log('model defined for table: ' + name + '\n' + JSON.stringify(attrs, function (k, v) {
+  //   if (k === 'type') {
+  //     for (let key in Sequelize) {
+  //       if (key === 'ABSTRACT' || key === 'NUMBER') {
+  //         continue
+  //       }
+  //       let dbType = Sequelize[key]
+  //       if (typeof dbType === 'function') {
+  //         if (v instanceof dbType) {
+  //           if (v._length) {
+  //             return `${dbType.key}(${v._length})`
+  //           }
+  //           return dbType.key
+  //         }
+  //         if (v === dbType) {
+  //           return dbType.key
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return v
+  // }, '  '))
   return sequelize.define(name, attrs, {
     tableName: name,
     timestamps: false,
@@ -118,35 +118,3 @@ exp.ID = ID_TYPE
 exp.generateId = generateId
 
 module.exports = exp
-
-// var mysql = require('mysql')
-
-// var pool = mysql.createPool({
-//   host: '127.0.0.1',
-//   user: 'root',
-//   password: 'tiger',
-//   port: '3306',
-//   database: 'onelife'
-// })
-// // 创建一个connection
-// pool.getConnection(function (err, connection) {
-//   if (err) {
-//     console.log('[query] - :' + err)
-//     return
-//   }
-//   console.log('[connection connect]  succeed!')
-// })
-
-// var db = {}
-// // callback是回调函数，连接建立后的connection作为其参数
-// db.con = function (callback) {
-//   pool.getConnection(function (err, connection) {
-//     if (err) {
-//       throw err
-//     } else {
-//       callback(connection)
-//     }
-//     connection.release()
-//   })
-// }
-// module.exports = db

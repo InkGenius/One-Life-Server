@@ -45,7 +45,8 @@ exports.done = function (req, res) {
       })
     }
     todo.update({
-      status: true
+      status: true,
+      finishedAt: Date.now()
     }).then(() => {
       findAll(req, res)
     })

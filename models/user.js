@@ -1,6 +1,6 @@
 const db = require('../db')
 
-module.exports = db.defineModel('todos', {
+module.exports = db.defineModel('user', {
   name: db.STRING,
   userType: db.INTEGER,
   class: db.INTEGER,

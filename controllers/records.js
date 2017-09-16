@@ -1,37 +1,43 @@
-const todoItem = require('../model').todoItem
+const Record = require('../model').record
+const Recordpicture = require('../model').recordpicture
+const User = require('../model').user
+const Experience = require('../model').experience
+
 const moment = require('moment')
 moment.locale('zh-cn')
 
 function findAll (req, res) {
-  todoItem.findAll().then(todos => {
-    var ans = {}
-    var todoNum = 0
-    var doneNum = 0
-    todos.forEach(obj => {
-      obj.createdAt = moment(obj.createdAt).fromNow()
-      if (obj.status) {
-        doneNum++
-      } else {
-        todoNum++
-      }
-    })
-    ans.todoNum = todoNum
-    ans.doneNum = doneNum
-    ans.list = todos
-    res.send(ans)
+  Record.findAll({
+    include: [{
+      model: User
+    }, {
+      model: Experience
+    }, {
+      model: Recordpicture,
+      as: 'Recordpictures'
+    }]
+  }).then(record => {
+    console.log(JSON.stringify(record))
+    res.send(record)
   })
 }
 exports.create = function (req, res) {
-  var newTodo = req.body.data
-  console.log(newTodo)
-  // todoItem.create({
-  //   typeId: newTodo.type,
-  //   context: newTodo.context,
-  //   status: false,
-  //   finishedAt: 0
-  // }).then(item => {
-  //   findAll(req, res)
-  // })
+  var recordpic = req.file
+
+  Record.create({
+    userId: req.body.userid,
+    experienceId: req.body.experienceid,
+    context: req.body.context,
+    mood: req.body.mood
+  }).then(record => {
+    Recordpicture.create({
+      recordId: record.id,
+      url: 'http://localhost:3001/images/record/' + recordpic.filename,
+      type: 1
+    }).then(item => {
+      findAll(req, res)
+    })
+  })
 }
 
 exports.list = function (req, res) {
@@ -39,7 +45,7 @@ exports.list = function (req, res) {
 }
 
 exports.done = function (req, res) {
-  todoItem.findById(req.body.data).then(todo => {
+  Record.findById(req.body.data).then(todo => {
     if (!todo) {
       return res.status(404).send({
         message: 'Todo Not Found'
@@ -55,7 +61,7 @@ exports.done = function (req, res) {
 }
 
 exports.delete = function (req, res) {
-  todoItem.findById(req.body.data).then(todo => {
+  Record.findById(req.body.data).then(todo => {
     if (!todo) {
       return res.status(404).send({
         message: 'Todo Not Found'

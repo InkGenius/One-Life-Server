@@ -15,9 +15,12 @@ function findAll (req, res) {
     }, {
       model: Recordpicture,
       as: 'Recordpictures'
-    }]
+    }],
+    order: [
+      ['createdAt', 'DESC']
+    ]
   }).then(record => {
-    console.log(JSON.stringify(record))
+    // console.log(JSON.stringify(record))
     res.send(record)
   })
 }

@@ -1,6 +1,7 @@
 var express = require('express')
 const todosController = require('../controllers/todos')
 const recordsController = require('../controllers/records')
+const userController = require('../controllers/user')
 var router = express.Router()
 var multer = require('multer')
 var uploadFolder = './public/images/record'
@@ -25,4 +26,6 @@ router.post('/todos/delete', todosController.delete)
 
 router.post('/record/add', upload.single('recordpic'), recordsController.create)
 router.get('/record/list', recordsController.list)
+
+router.get('/user/currentUser', userController.currentUser)
 module.exports = router
